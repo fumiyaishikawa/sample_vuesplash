@@ -66,7 +66,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         Route::prefix('api')
-             ->middleware('api')
+             ->middleware('web')    //アプリ起動時にapp/Http/kernel.phpのwebを呼び出す
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
     }

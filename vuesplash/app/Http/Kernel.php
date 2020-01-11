@@ -37,7 +37,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
-        'api' => [
+        'api' => [ //TwitterAPIなどのようなステートレスなAPIを読み込む
             'throttle:60,1',
             'bindings',
         ],
