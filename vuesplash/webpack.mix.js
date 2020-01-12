@@ -11,9 +11,9 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.browserSync({
+mix.browserSync({    //自動的にブラウザをリロードする設定
    proxy: 'localhost', // アプリの起動アドレス, ここ間違っているかもしれない
    open: false // ブラウザを自動で開かない
 })
-   .js('resources/js/app.js', 'public/js')
-   .version()
+   .js('resources/js/app.js', 'public/js')   //JSをコンパイルする設定
+   .version()  //コンパイル時にキャッシュを読み込まないようにする。バージョニング。
