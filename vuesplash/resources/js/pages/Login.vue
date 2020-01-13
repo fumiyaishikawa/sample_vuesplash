@@ -63,6 +63,7 @@ export default {
     async login() {
       await this.$store.dispatch("auth/login", this.loginForm);
       // トップページに移動する
+      console.log("ログインボタンをクリック");
       this.$router.push("/");
     },
     //新規登録処理

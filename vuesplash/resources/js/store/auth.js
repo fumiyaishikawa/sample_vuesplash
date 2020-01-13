@@ -3,7 +3,12 @@ const state = {
     user: null
 }
 
-const getters = {}
+const getters = {
+    // ログインチェック。二重否定で確実に真偽値を返す
+    check: state => !!state.user,
+    // ユーザーがからの場合はusernameにから文字を返す
+    username: state => state.user ? state.user.name : ''
+}
 
 const mutations = {
     // ユーザーセット
@@ -28,6 +33,12 @@ const actions = {
     async logout(context) {
         const response = await axios.post('/api/logout')
         context.commit('setUser', null)
+    },
+    // ログインしているユーザー情報を設定するAPI
+    async currentUser(context) {
+        const response = await axios.get('/api/user')
+        const user = response.data || null
+        context.commit('setUser', user)
     }
 }
 

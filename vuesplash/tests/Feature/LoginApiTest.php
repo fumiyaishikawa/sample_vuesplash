@@ -41,7 +41,7 @@ class LoginApiTest extends TestCase {
         ]);
 
         // 正しいレスポンスが返り、ユーザ名が取得できることを確認
-        $response->assertStatus(422)->assertJson(['name' => $this->user->name]);
+        $response->assertStatus(200)->assertJson(['name' => $this->user->name]);
 
         // 指定したユーザーが認証されていることを確認
         $this->assertAuthenticatedAs($this->user);

@@ -25,3 +25,7 @@ Route::post('/register', 'Auth\RegisterController@register')->name('register');
 Route::post('/login', 'Auth\LoginController@login')->name('login');
 // ログアウト
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
+// ログインユーザーを返却する
+Route::get('/user', function() {
+    return Auth::user();
+ })->name('user');
