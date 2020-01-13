@@ -11,6 +11,7 @@ use Illuminate\Http\Request;    //追加
 
 class RegisterController extends Controller
 {
+
     /*
     |--------------------------------------------------------------------------
     | Register Controller

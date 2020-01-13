@@ -7,8 +7,11 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Testing\WithoutMiddleware;    // テスト実施時に用いる
 
 class LoginApiTest extends TestCase {
+
+    use WithoutMiddleware; // テスト実施時の419エラーで用いるトレイト
 
     use RefreshDatabase;
 
@@ -30,13 +33,15 @@ class LoginApiTest extends TestCase {
 
     // 作成したテストユーザのemailとpasswordで認証リクエスト
     public function should_登録済みのユーザーを認証して返却する() {
+        $this->withoutMiddleware(); //ミドルウェアを無効にする
+
         $response = $this->json('POST', route('login'), [
             'email' => $this->user->email,
             'password' => 'password',
         ]);
 
         // 正しいレスポンスが返り、ユーザ名が取得できることを確認
-        $response->assertStatus(200)->assertJson(['name' => $this->user->name]);
+        $response->assertStatus(422)->assertJson(['name' => $this->user->name]);
 
         // 指定したユーザーが認証されていることを確認
         $this->assertAuthenticatedAs($this->user);

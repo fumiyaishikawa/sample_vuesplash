@@ -1,0 +1,6 @@
+\du
+\l
+ALTER USER postgres with encrypted password 'secret';
+q
+\q
+\s

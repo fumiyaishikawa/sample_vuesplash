@@ -1,9 +1,11 @@
 <template>
   <div class="container-small">
+    <!-- 切り替えタブ -->
     <ul class="tab">
       <li class="tab__item" :class="{ 'tab__item--active': tab === 1 }" @click="tab = 1">ログイン</li>
       <li class="tab__item" :class="{ 'tab__item--active': tab === 2 }" @click="tab = 2">新規登録</li>
     </ul>
+    <!-- ログインフォーム -->
     <div class="panel" v-show="tab === 1">
       <form class="form" @submit.prevent="login">
         <label for="login-email">Eメールアドレス</label>
@@ -15,15 +17,16 @@
         </div>
       </form>
     </div>
+    <!-- 新規登録フォーム -->
     <div class="panel" v-show="tab === 2">
       <form class="form" @submit.prevent="register">
         <label for="username">ユーザー名</label>
-        <input type="text" class="form__item" ide="username" v-model="registerForm.name" />
+        <input type="text" class="form__item" id="username" v-model="registerForm.name" />
         <label for="email">Eメールアドレス</label>
         <input type="text" class="form__item" id="email" v-model="registerForm.email" />
-        <label for="pasword">パスワード</label>
+        <label for="password">パスワード</label>
         <input type="password" class="form__item" id="password" v-model="registerForm.password" />
-        <label for="password-confirmation">パスワード（確認）</label>
+        <label for="password-confirmation">パスワード確認</label>
         <input
           type="password"
           class="form__item"
@@ -31,7 +34,7 @@
           v-model="registerForm.password_confirmation"
         />
         <div class="form__button">
-          <button class="button button--inverse" type="submit">新規登録</button>
+          <button type="submit" class="button button--inverse">新規登録</button>
         </div>
       </form>
     </div>
@@ -56,11 +59,18 @@ export default {
     };
   },
   methods: {
-    login() {
-      console.log(this.loginForm);
+    // ログイン処理
+    async login() {
+      await this.$store.dispatch("auth/login", this.loginForm);
+      // トップページに移動する
+      this.$router.push("/");
     },
-    register() {
-      console.log(this.registerForm);
+    //新規登録処理
+    // 名前空間でauthストアのregisterアクションを呼び出す
+    async register() {
+      await this.$store.dispatch("auth/register", this.registerForm);
+      // トップページに移動する
+      this.$router.push("/");
     }
   }
 };
