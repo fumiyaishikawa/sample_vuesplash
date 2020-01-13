@@ -12,3 +12,9 @@ window.axios.interceptors.request.use(config => {
 
     return config
 })
+
+// responseインターセプターはレスポンスを受けた後の処理を上書き
+window.axios.interceptors.response.use(
+    response => response,   //第一引数は成功時の処理
+    error => error.response || error    //第二引数は失敗時の処理
+)
