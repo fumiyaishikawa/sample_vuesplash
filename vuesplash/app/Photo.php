@@ -14,6 +14,7 @@ class Photo extends Model
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
+
         if (! Arr::get($this->attributes, 'id')) {
             $this->setId();
         }
@@ -26,6 +27,7 @@ class Photo extends Model
     {
         $this->attributes['id'] = $this->getRandomId();
     }
+
     /**
      * ランダムなID値を生成する
      * @return string
@@ -36,11 +38,15 @@ class Photo extends Model
             range(0, 9), range('a', 'z'),
             range('A', 'Z'), ['-', '_']
         );
+
         $length = count($characters);
+
         $id = "";
+
         for ($i = 0; $i < self::ID_LENGTH; $i++) {
             $id .= $characters[random_int(0, $length - 1)];
         }
+
         return $id;
     }
 }

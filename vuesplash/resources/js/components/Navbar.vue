@@ -5,9 +5,9 @@
     <div class="navbar__menu">
       <!-- 写真投稿ボタン -->
       <div v-if="isLogin" class="navbar__item">
-        <button class="button">
+        <button class="button" @click="showForm = ! showForm">
           <i class="icon ion-md-add"></i>
-          写真を投稿する
+          Submit a photo
         </button>
       </div>
       <!-- ログイン状態で切り替え -->
@@ -16,11 +16,22 @@
         <router-link class="button button--link" to="/login">ログイン / 新規登録</router-link>
       </div>
     </div>
+    <PhotoForm v-model="showForm" />
   </nav>
 </template>
 
 <script>
+import PhotoForm from "./PhotoForm.vue";
+
 export default {
+  components: {
+    PhotoForm
+  },
+  data() {
+    return {
+      showForm: false
+    };
+  },
   computed: {
     // ログイン状態の確認
     isLogin() {

@@ -24,7 +24,7 @@ class StorePhoto extends FormRequest
     {
         return [
             //ファイル形式を指定, 必要ならファイルサイズなども
-            'photo' => 'required|file|mimes:jpg,jpeg,png,gif'
+            'photo' => 'required|file|mimes:jpg,jpeg,png,gif'       //fileの次にimage必要？
         ];
     }
 }
