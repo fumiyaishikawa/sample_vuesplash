@@ -10,12 +10,11 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+//写真ダウンロード
+Route::get('/photos/{photo}/download', 'PhotoController@download');
 
+//最後に返却するルート
 //どんなURLでもindexテンプレートを返す。コンテンツはvueRouterで表示する
 Route::get('/{any}', function () {
     return view('index');
 })->where('any', '.*');
-
-// Route::get('/{any?}', function () {
-//     return view('index');
-// })->where('any', '.+');
