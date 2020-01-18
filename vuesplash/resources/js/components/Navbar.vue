@@ -7,11 +7,11 @@
       <div v-if="isLogin" class="navbar__item">
         <button class="button" @click="showForm = ! showForm">
           <i class="icon ion-md-add"></i>
-          Submit a photo
+          写真を送信
         </button>
       </div>
       <!-- ログイン状態で切り替え -->
-      <span v-if="isLogin" class="navbar__item">ユーザーネーム：{{ username }}</span>
+      <span v-if="isLogin" class="navbar__item">ユーザー名：{{ username }}さん</span>
       <div v-else class="navbar__item">
         <router-link class="button button--link" to="/login">ログイン / 新規登録</router-link>
       </div>

@@ -16,7 +16,13 @@ Vue.use(VueRouter)
 const routes = [
     {
         path: '/',
-        component: PhotoList
+        component: PhotoList,
+        props: route => {
+            const page = route.query.page
+            return {
+                page: /^[1-9][0-9]*$/.test(page) ? page * 1 : 1     //整数と解釈されない値は「1」と見なして返却
+            }
+        }
     },
     {
         path: '/photos/:id',    //写真IDを渡す
@@ -44,6 +50,9 @@ const routes = [
 //VueRouterインスタンスを作成する
 const router = new VueRouter({
     mode: 'history',
+    scrollBehavior() {   //ページ遷移時にスクロール位置を先頭に固定
+        return { x: 0, y: 0 }
+    },
     routes
 })
 

@@ -83,4 +83,7 @@ class Photo extends Model
     protected $visible = [
         'id', 'owner', 'url',
     ];
+
+    // ページネーションで一度に取得するアイテム数
+    protected $perPage = 5;
 }
