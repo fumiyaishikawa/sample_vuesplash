@@ -5,21 +5,48 @@
       <figcaption>Posted by {{ photo.owner.name }}</figcaption>
     </figure>
     <div class="photo-detail__pane">
+      <!-- いいねボタン -->
       <button class="button button--like" title="Like photo">
         <i class="icon ion-md-heart"></i>12
       </button>
+      <!-- 写真のダウンロード -->
       <a :href="`/photos/${photo.id}/download`" class="button" title="Download photo">
         <i class="icon ion-md-aarow-round-down"></i>ダウンロード
       </a>
+      <!-- コメント -->
       <h2 class="photo-detail__title">
         <i class="icon ion-md-chatboxes"></i>コメント
       </h2>
+      <!-- コメントの一覧表示 -->
+      <ul v-if="photo.comments.length > 0" class="photo-detail__comments">
+        <li
+          v-for="comment in photo.comments"
+          :key="comment.content"
+          class="photo-detail__commentItem"
+        >
+          <p class="photo-detail__commentBody">{{ comment.content }}</p>
+          <p class="photo-detail__commentInfo">{{ comment.author.name }}</p>
+        </li>
+      </ul>
+      <p v-else>コメントがまだありません。</p>
+      <!-- コメントの投稿フォーム -->
+      <form v-if="isLogin" @submit.prevent="addComment" class="form">
+        <div v-if="commentErrors" class="errors">
+          <ul v-if="commentErrors.content">
+            <li v-for="msg in commentErrors.content" :key="msg">{{ msg }}</li>
+          </ul>
+        </div>
+        <textarea class="form__item" v-model="commentContent"></textarea>
+        <div class="form__button">
+          <button type="submit" class="button button--inverse">コメント送信</button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
-import { OK } from "../util";
+import { OK, CREATED, UNPROCESSABLE_ENTITY } from "../util";
 
 export default {
   props: {
@@ -31,8 +58,15 @@ export default {
   data() {
     return {
       photo: null,
-      fullWidth: false //写真をクリックすると横幅いっぱいに広げる
+      fullWidth: false, //写真をクリックすると横幅いっぱいに広げる
+      commentContent: "",
+      commentErrors: null
     };
+  },
+  computed: {
+    isLogin() {
+      return this.$store.getters["auth/check"];
+    }
   },
   methods: {
     async fetchPhoto() {
@@ -44,6 +78,29 @@ export default {
       }
 
       this.photo = response.data;
+    },
+    async addComment() {
+      const response = await axios.post(`/api/photos/${this.id}/comments`, {
+        content: this.commentContent
+      });
+
+      // バリデーションエラー
+      if (response.status === UNPROCESSABLE_ENTITY) {
+        this.commentErrors = response.data.errors;
+        return false;
+      }
+
+      this.commentContent = "";
+      // エラーメッセージをクリア
+      this.commentErrors = null;
+
+      // その他のエラー
+      if (response.status !== CREATED) {
+        this.$store.commit("error/setCode", response.status);
+        return false;
+      }
+      // 投稿したてのコメントを表示する
+      this.photo.comments = [response.data, ...this.photo.comments];
     }
   },
   watch: {

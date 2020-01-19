@@ -60,6 +60,14 @@ class Photo extends Model
         return $this->belongsTo('App\User', 'user_id', 'id', 'users');
     }
 
+    /**
+     * リレーションシップ - commentsテーブル
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments() {
+        return $this->hasMany('App\Comment')->orderBy('id', 'desc');
+    }
+
     //urlアクセサの定義
     /**
      * アクセサ - url
@@ -81,7 +89,7 @@ class Photo extends Model
      * 逆にJSONに表示させる必要のない項目を隠す
      */
     protected $visible = [
-        'id', 'owner', 'url',
+        'id', 'owner', 'url', 'comments',
     ];
 
     // ページネーションで一度に取得するアイテム数
