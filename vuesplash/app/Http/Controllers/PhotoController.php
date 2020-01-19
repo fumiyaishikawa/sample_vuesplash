@@ -62,10 +62,9 @@ class PhotoController extends Controller
     /**
      * 写真一覧
      */
-    public function index()
-    {
+    public function index() {
         //withメソッドはリレーションを事前にロードしておくメソッド
-        $photos = Photo::with(['owner'])
+        $photos = Photo::with(['owner', 'likes'])
         ->orderBy(Photo::CREATED_AT, 'desc')->paginate();
 
         return $photos;
@@ -102,7 +101,7 @@ class PhotoController extends Controller
      * @return Photo
      */
     public function show(string $id) {
-        $photo = Photo::where('id', $id)->with(['owner', 'comments.author'])->first();
+        $photo = Photo::where('id', $id)->with(['owner', 'comments.author', 'likes'])->first();
         return $photo ?? abort(404);
     }
 
@@ -122,5 +121,45 @@ class PhotoController extends Controller
         $new_comment = Comment::where('id', $comment->id)->with('author')->first();
 
         return response($new_comment, 201);
+    }
+
+    /**
+     * いいね
+     * @param string $id
+     * @return array
+     */
+    public function like(string $id) {
+        $photo = Photo::where('id', $id)->with('likes')->first();
+
+        if(!$photo) {
+            abort(404);
+        }
+
+        /**
+         * 何回実行しても1個しかいいねが付かないように、
+         * まず特定の写真およびログインユーザーに紐づくいいねを削除して（detach）から、新たに追加（attach）しています。
+         */
+
+        $photo->likes()->detach(Auth::user()->id);
+        $photo->likes()->attach(Auth::user()->id);
+
+        return ['photo_id' => $id];
+    }
+
+    /**
+     * いいね解除
+     * @param string $id
+     * @return array
+     */
+    public function unlike(string $id) {
+        $photo = Photo::where('id', $id)->with('likes')->first();
+
+        if(! $photo) {
+            abort(404);
+        }
+
+        $photo->likes()->detach(Auth::user()->id);
+
+        return ['photo_id' => $id];
     }
 }
